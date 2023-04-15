@@ -19,6 +19,7 @@ start = c
 def dijkstra(start):
     q = []
     heapq.heappush(q, (0, start)) # (출발회사로부터 걸리는 시간, 회사번호)
+    times[start] = 0
     while q:
         time, now = heapq.heappop(q)
         # 방문한 적이 있는 회사인지 체크
@@ -33,4 +34,4 @@ def dijkstra(start):
 dijkstra(start)
 # 값이 무한대인 경우 (=도달할 수 없는 도시) 삭제
 times = list(filter(lambda t: t != INF, times))
-print(len(times), max(times))
+print(len(times) - 1, max(times))
