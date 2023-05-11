@@ -7,16 +7,14 @@ def solution(numbers, target):
     # 덱 생성
     dq = deque()
     # 덱 초기화
-    idx = 0
-    dq.append(0)
+    dq.append((0, 0))
     while dq:
         # 방문처리
         current = dq.popleft()
-        if idx < length:
-            dq.append(current + numbers[idx])
-            dq.append(current - numbers[idx])
-            idx += 1
+        if current[1] < length:
+            dq.append((current[0] + numbers[current[1]], current[1]+1))
+            dq.append((current[0] - numbers[current[1]], current[1]+1))
         else:
-            if current == target:
+            if current[0] == target:
                 answer += 1
     return answer
