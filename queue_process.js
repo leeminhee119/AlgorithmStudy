@@ -1,4 +1,4 @@
-// 1차 시도: 시간초과
+// 2차 시도: 시간초과 해결, 오답
 
 class Queue {
   constructor(queue) {
@@ -15,9 +15,6 @@ class Queue {
     this.front++;
     return value;
   }
-  getMax() {
-    return Math.max(this.queue);
-  }
   getSize() {
     return this.rear - this.front;
   }
@@ -28,9 +25,10 @@ function solution(priorities, location) {
   // location의 프로세스가 실행될 때까지
 
   const myQueue = new Queue(priorities);
+  priorities.sort((a, b) => b - a);
 
   while (myQueue.getSize() > 0) {
-    let currMax = myQueue.getMax();
+    let currMax = priorities[answer];
     let currPriority = myQueue.dequeue();
 
     if (location > 0) {
