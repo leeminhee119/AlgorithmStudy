@@ -1,10 +1,16 @@
-// 2차 시도: 시간초과 해결, 오답
+// 프로그래머스_프린터
+// 3차시도: 정답
+/* 
+1. 큐 클래스를 처음부터 constructor를 통해 초기화하지 말고, 하나씩 enqueue하자.
+2. 배열로 구현한 큐 클래스의 메소드로 Math.max를 사용하면,  배열의 빈 값까지 Math.max 메소드 함수 내에 들어가게 된다.
+따라서 그냥 내림차순 정렬해서 최대값을 알아내자
+*/
 
 class Queue {
-  constructor(queue) {
-    this.queue = queue;
+  constructor() {
+    this.queue = [];
     this.front = 0;
-    this.rear = queue.length - 1;
+    this.rear = 0;
   }
   enqueue(value) {
     this.queue[this.rear++] = value;
@@ -24,7 +30,11 @@ function solution(priorities, location) {
   var answer = 0; // 실행한 프로세스 개수
   // location의 프로세스가 실행될 때까지
 
-  const myQueue = new Queue(priorities);
+  const myQueue = new Queue();
+  priorities.forEach((priority) => {
+    myQueue.enqueue(priority);
+  });
+
   priorities.sort((a, b) => b - a);
 
   while (myQueue.getSize() > 0) {
