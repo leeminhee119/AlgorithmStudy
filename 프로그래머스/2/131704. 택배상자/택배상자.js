@@ -1,12 +1,34 @@
 function solution(order) {
-    const support = [];
-    let index = 0;
-    for (let box = 1; box < order.length + 1; box++) {
-        support.push(box);
-        while (support.length > 0 && order[index] === support[support.length - 1]) {
-            support.pop();
-            index++;
+    const boxes = order.length;
+    const stack = [];
+    let targetIdx = 0;
+    let answer = 0;
+    let curBox = 1;
+    while (curBox <= boxes) {
+        const targetBox = order[targetIdx];
+        if (curBox === targetBox) {
+            answer++;
+            targetIdx++;
+            curBox++;
+            continue;
+        }
+        if (stack.length === 0 || stack[stack.length - 1] < targetBox) {
+            stack.push(curBox);
+            curBox++;
+            continue;
+        }
+        if (stack[stack.length - 1] === targetBox) {
+            stack.pop();
+            answer++;
+            targetIdx++;
+        } else if (stack[stack.length - 1] > targetBox) {
+            break;
         }
     }
-    return index;
+    while (stack.length && stack[stack.length - 1] === order[targetIdx]) {
+        targetIdx++;
+        stack.pop();
+        answer++;
+    }
+    return answer;
 }
