@@ -1,42 +1,37 @@
 function solution(arr) {
-    const n = arr.length;
-    let [cnt0, cnt1] = arr.reduce((acc, cur) => {
-        const count = cur.reduce((acc, cur) => {
-            cur === 0 ? acc[0] ++ : acc[1] ++
-            return acc;
-        }, [0, 0])
-        return acc.map((cnt, i) => cnt + count[i]);
-    }, [0, 0])
-                                  
-    function quadSplit(arr, n, x, y) {
-        if (n === 1) {
-            return;
-        }
-        
-        const res = checkAll(arr, n, x, y);
-        if (res === false) {
-            quadSplit(arr, n / 2, x, y);
-            quadSplit(arr, n / 2, x, y + n / 2);
-            quadSplit(arr, n / 2, x + n / 2, y);
-            quadSplit(arr, n / 2, x + n / 2, y + n / 2);
-        } else {
-            res === 0 ? cnt0 = cnt0 - n * n + 1 : cnt1 = cnt1 - n * n + 1;
-        }
-    }
-    
-    function checkAll(arr, n, x, y) {
-        const number = arr[x][y];
-        for (let i = x; i < x + n; i++) {
-            for (let j = y; j < y + n; j++) {
-                if (arr[i][j] !== number) {
-                    return false;
-                }
+    function checkAll(start, size) {
+        const [x, y] = start;
+        const num = arr[x][y];
+        for (let i = x; i < x + size; i++) {
+            for (let j = y; j < y + size; j++) {
+                if (arr[i][j] !== num) return false;
             }
         }
-        return number;
+        return true;
     }
     
-    quadSplit(arr, n, 0, 0);
+    let [cnt0, cnt1] = arr.reduce((dict, numbers) => {
+        const [cnt0, cnt1] = numbers.reduce((acc, cur) => {
+            cur ? acc[1]++ : acc[0]++;
+            return acc;
+        }, [0, 0]);
+        return [dict[0] + cnt0, dict[1] + cnt1];
+    }, [0, 0]);
     
+    function check(start, size) {
+        if (size === 1) return;
+        const isEqual = checkAll(start, size);
+        const [x, y] = start;
+        if (isEqual) {
+            arr[x][y] === 0 ? cnt0 = cnt0 - size * size + 1 : cnt1 = cnt1 - size * size + 1;
+        } else {
+            check([x, y], size / 2);
+            check([x + size / 2, y], size / 2);
+            check([x, y + size / 2], size / 2);
+            check([x + size / 2, y + size / 2], size / 2);
+        }
+    }
+    
+    check([0, 0], arr.length);
     return [cnt0, cnt1];
 }
