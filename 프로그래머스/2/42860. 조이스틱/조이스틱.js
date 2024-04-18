@@ -1,29 +1,20 @@
 function solution(name) {
     const alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const nameLen = name.length;
     let answer = 0;
-    let minMove = name.length - 1;
-    for (let i = name.length - 1; i >= 0; i--) {
-        if (name[i] !== 'A') {
-            minMove = i;
-            break;
+    let minMoveCnt = nameLen - 1;
+    for (let i = 0; i < nameLen; i++) {
+        const alphIdx = alphabets.indexOf(name[i]);
+        answer += Math.min(alphIdx, 26 - alphIdx);
+        
+        let nextIdxNotA = i + 1;
+        while (name[nextIdxNotA] === 'A' && nextIdxNotA < nameLen) {
+            nextIdxNotA++;
         }
+        
+        minMoveCnt = Math.min(minMoveCnt, i * 2 + nameLen - nextIdxNotA, (nameLen - nextIdxNotA) * 2 + i);
     }
-    [...name].forEach((char, i) => {
-        const alphIndex = alphabets.indexOf(char);
-        if (alphIndex !== 0 && alphIndex < 13) {
-            answer += alphIndex; 
-        } else if (alphIndex !== 0 && alphIndex >= 13) {
-            answer += (26 - alphIndex);
-        }
-        
-        let nextIndex = i + 1;
-        
-        while (nextIndex < name.length && name[nextIndex] === 'A') {
-            nextIndex++;
-        }
-        minMove = Math.min(minMove, i * 2 + name.length - nextIndex, 2 * (name.length - nextIndex) + i);
-    })
-    answer += minMove;
-    console.log(minMove, answer - minMove)
-    return answer;
+    
+    return answer + minMoveCnt;
+    
 }
