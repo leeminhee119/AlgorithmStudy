@@ -3,39 +3,43 @@ const readline = require("readline").createInterface({
   output: process.stdout,
 });
 
-let input = [];
+const lines = [];
 
 readline
   .on("line", function (line) {
-    input.push(line);
+    lines.push(line);
   })
   .on("close", function () {
-    solution(input);
+    solution(lines);
     process.exit();
   });
 
-function solution(input) {
-  const calendar = new Array(366).fill(0);
-  input
-    .slice(1)
-    .map((str) => str.split(" ").map(Number))
-    .forEach(([start, end]) => {
-      for (let i = start; i <= end; i++) {
-        calendar[i] += 1;
-      }
-    });
-  let answer = 0;
-  let temp = [];
-  calendar.slice(1).forEach((row) => {
-    if (row) {
-      temp.push(row);
-    } else if (row === 0 && temp.length) {
-      answer += temp.length * Math.max(...temp);
-      temp = [];
+function solution(lines) {
+  const N = +lines[0];
+  const schedules = lines.slice(1).map((line) => line.split(" ").map(Number));
+
+  const calendar = schedules.reduce((arr, [s, e]) => {
+    for (let i = s; i <= e; i++) {
+      arr[i]++;
     }
-  });
-  if (temp.length) {
-    answer += temp.length * Math.max(...temp);
+    return arr;
+  }, new Array(366).fill(0));
+
+  let answer = 0;
+  const visited = new Array(366).fill(false);
+
+  function getArea(start, width, height) {
+    if (!calendar[start]) {
+      return width * height;
+    }
+    visited[start] = true;
+    return getArea(start + 1, width + 1, Math.max(height, calendar[start]));
+  }
+
+  for (let i = 1; i <= 365; i++) {
+    if (visited[i]) continue;
+    if (!calendar[i]) continue;
+    answer += getArea(i, 0, 0);
   }
   console.log(answer);
 }
