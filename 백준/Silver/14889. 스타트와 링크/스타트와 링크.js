@@ -1,51 +1,60 @@
+const readline = require("readline").createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
 const lines = [];
 
-require('readline').createInterface({
-    input: process.stdin,
-    output: process.stdout,
-}).on('line', (line) => {
+readline
+  .on("line", function (line) {
     lines.push(line);
-}).on('close', () => {
+  })
+  .on("close", function () {
     const n = +lines[0];
     const arr = lines.slice(1);
     solution(n, arr);
     process.exit();
-})
+  });
 
 function solution(n, arr) {
-    
-const S = arr.map((line) => line.split(' ').map(Number));
+  const S = arr.map((line) => line.split(" ").map(Number));
+  const numbers = Array.from({ length: n }, (_, i) => i);
 
-const getCombinations = (arr, r) => {
-    const result = [];
-    if (r === 1) return arr.map((el) => [el]);
-    arr.forEach((fixed, index, origin) => {
-        const rest = origin.slice(index + 1);
-        const comb = getCombinations(rest, r - 1);
-        const attached = comb.map((el) => [fixed, ...el]);
-        result.push(...attached);
-    })
-    return result;
-}
+  function getPower(arr) {
+    let power = 0;
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = i + 1; j < arr.length; j++) {
+        const a = arr[i];
+        const b = arr[j];
+        power += S[a][b] + S[b][a];
+      }
+    }
 
-const getPower = (arr) => {
-    const couples = getCombinations(arr, 2);
-    return couples.reduce((acc, [a, b]) => {
-        return acc + S[a - 1][b - 1] + S[b - 1][a - 1];
-    }, 0)
-}
+    return power;
+  }
 
-const members = Array.from({ length: n }, (_, i) => i + 1);
-const combinations = getCombinations(members, n / 2);
-let minDiff = Infinity;
+  let minDiff = Infinity;
 
-combinations.forEach((combination) => {
-    const start = combination;
-    const link = members.filter((member) => !start.includes(member));
-    const diff = Math.abs(getPower(start) - getPower(link));
-    minDiff = Math.min(diff, minDiff);
-})
+  const startTeam = [];
+  function backtrack(cnt, start) {
+    if (cnt === n / 2) {
+      const linkTeam = numbers.filter((num) => !startTeam.includes(num));
+      const diff = Math.abs(getPower(startTeam) - getPower(linkTeam));
+      minDiff = Math.min(diff, minDiff);
+      return;
+    }
 
-console.log(minDiff);
+    for (let i = start; i < n; i++) {
+      if (visited[i]) continue;
+      visited[i] = true;
+      startTeam.push(i);
+      backtrack(cnt + 1, i);
+      visited[i] = false;
+      startTeam.pop();
+    }
+  }
 
+  const visited = new Array(n).fill(false);
+  backtrack(0, 0);
+  console.log(minDiff);
 }
