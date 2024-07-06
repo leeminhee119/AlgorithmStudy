@@ -32,15 +32,5 @@ function solution(lines) {
     }
     countEqual++;
   }
-  for (let i = index + 1; i < infos.length; i++) {
-    if (
-      infos[i][1] !== infos[index][1] ||
-      infos[i][2] !== infos[index][2] ||
-      infos[i][3] !== infos[index][3]
-    ) {
-      break;
-    }
-    countEqual++;
-  }
   console.log(index + 1 - countEqual);
 }
