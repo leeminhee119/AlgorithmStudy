@@ -16,27 +16,23 @@ readline
 
 function solution(lines) {
   const [N, K] = lines[0].split(" ").map(Number);
-  const bench = lines[1].split("");
+  const sequence = lines[1];
 
-  // 먹을 수 있는 햄버거들 중 최대한 왼쪽꺼를 먹어야
-  // 다음 사람도 햄버거를 먹을 수 있는 확률이 높아진다.
+  // 햄버거를 먹을 수 있는 사람의 최대 수
+  // 거리가 K까지의 햄버거만 먹을 수 있음
 
-  let count = 0;
+  // 사람마다 먹을 수 있는 햄버거들 중 가장 왼쪽 애부터 먹는다.
+
+  let answer = 0;
+  const eaten = Array.from({ length: N }, () => false);
   for (let i = 0; i < N; i++) {
-    if (bench[i] !== "P") {
-      continue;
-    }
-    const start = i - K;
-    const end = i + K;
-    for (let j = start; j <= end; j++) {
-      if (j >= N) break;
-      if (bench[j] === "H") {
-        bench[j] = 0;
-        count++;
-        break;
-      }
+    if (sequence[i] === "H") continue;
+    for (let j = Math.max(i - K, 0); j <= i + K && j < N; j++) {
+      if (sequence[j] === "P" || eaten[j]) continue;
+      eaten[j] = true;
+      answer++;
+      break;
     }
   }
-
-  console.log(count);
+  console.log(answer);
 }
