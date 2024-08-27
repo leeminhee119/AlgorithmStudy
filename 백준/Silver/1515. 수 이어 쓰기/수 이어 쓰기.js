@@ -15,19 +15,25 @@ readline
   });
 
 function solution(lines) {
-  const rest = lines[0].split("").map(Number);
-  let cur = 1;
-  let idx = 0;
-  while (true) {
-    if (idx >= rest.length) break;
-    const curNums = cur.toString().split("").map(Number);
-    for (let i = 0; i < curNums.length; i++) {
-      if (idx >= rest.length) break;
-      if (curNums[i] === rest[idx]) {
-        idx++;
+  // 1부터 N까지 차례대로
+
+  // 남은 숫자
+  const digits = lines[0].split("");
+
+  // N 중에 최솟값
+
+  let pointer = 0; // points to digit
+  let number = "1";
+
+  while (pointer < digits.length) {
+    let j = 0;
+    while (j < number.length && pointer < digits.length) {
+      if (number[j] === digits[pointer]) {
+        pointer++;
       }
+      j++;
     }
-    cur++;
+    number = (parseInt(number) + 1).toString();
   }
-  console.log(cur - 1);
+  console.log(parseInt(number) - 1);
 }
