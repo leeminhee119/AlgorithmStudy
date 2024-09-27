@@ -1,11 +1,14 @@
 function solution(numbers) {
-    const answer = Array.from({length: numbers.length}, () => -1);
+    const result = Array.from({ length: numbers.length }, () => -1);
     const stack = [];
-    for (let i = 0; i < numbers.length; i++) {
-        while (numbers[stack[stack.length - 1]] < numbers[i]) {
-            answer[stack.pop()] = numbers[i];
+    numbers.forEach((num, idx) => {
+        // 현재 숫자가 스택의 top보다 크다면
+        while (stack.length && num > stack[stack.length - 1][0]) {
+            const [top, topIdx] = stack.pop();
+            result[topIdx] = num;
         }
-        stack.push(i);
-    }
-    return answer;
+        
+        stack.push([num, idx]);
+    })
+    return result;
 }
