@@ -1,39 +1,27 @@
 function solution(book_time) {
-    function getMinutes(timeString) {
-        const [h, m] = timeString.split(':').map(Number);
+    function getTimeInteger (timeStr) {
+        const [h, m] = timeStr.split(':').map(Number);
         return h * 60 + m;
     }
-    // 퇴실 후 10분까지 포함, 단위: 분
-    const occupied_time = book_time.map(([start, end]) => [getMinutes(start), getMinutes(end) + 10]);
+    // 끝나는 시간이 제일 빠른 애를 방에 넣고
+    // 그 다음으로 빠른 애 순서대로 기존 방/새로운 방에 넣는다
+    // 방들을 끝나는 시간이 느린 순으로 정렬 
     
-    // 방의 개수가 최소여야 함
-    // 
-    // 모든 방을 순회하며 종료 시각이 시작 시각보다 이전이면 그 방을 갱신 (마지막 종료시간을 담은 일차원 배열)
-
-    // 시간복잡도 O(N^2)
     
-    occupied_time.sort((a, b) => a[0] - b[0]);
-    
-    const rooms = [];
-    occupied_time.forEach(([start, end]) => {
-        // let isJoined = false;
-        // for (let i = 0; i < rooms.length; i++) {
-        //     if (rooms[i][1] <= start) {
-        //         rooms[i] = [start, end];
-        //         isJoined = true;
-        //     }
-        // }
-        // if (!isJoined) {
-        //     rooms.push([start, end]);
-        // }
-        // rooms.sort((a, b) => b[1] - a[1]);
-        const idx = rooms.findIndex((roomEnd) => roomEnd <= start);
-        if (idx < 0) {
-            rooms.push(end);
-        } else {
-            rooms[idx] = end;
+    const endTimes = [];
+    const bookings = book_time.map(([start, end]) => [getTimeInteger(start), getTimeInteger(end)]).sort((a, b) => a[1] - b[1]);
+    for (const [s, e] of bookings) {
+        if (endTimes.length === 0) {
+            endTimes.push(e + 10);
+            continue;
         }
-    })
-    
-    return rooms.length;
+        endTimes.sort((a, b) => b - a);
+        const targetIdx = endTimes.findIndex((time) => time <= s);
+        if (targetIdx === -1) {
+            endTimes.push(e + 10);
+        } else {
+            endTimes[targetIdx] = e + 10;
+        }
+    }
+    return endTimes.length;
 }
