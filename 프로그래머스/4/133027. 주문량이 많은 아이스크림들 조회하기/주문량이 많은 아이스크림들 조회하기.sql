@@ -1,11 +1,16 @@
 SELECT flavor
 FROM (
-    SELECT flavor, total_order
-    FROM first_half
-    UNION all
-    SELECT flavor, total_order
-    FROM july
-) as unioned
-GROUP BY flavor
-ORDER BY SUM(total_order) desc
+    SELECT combined.flavor, sum(total_order) as total_order
+    FROM (
+        SELECT flavor, sum(total_order) as total_order
+        FROM first_half
+        GROUP BY flavor
+        UNION ALL
+        SELECT flavor, sum(total_order) as total_order
+        FROM july
+        GROUP BY flavor
+    ) as combined
+    GROUP BY combined.flavor
+) as t
+ORDER BY total_order desc
 LIMIT 3
