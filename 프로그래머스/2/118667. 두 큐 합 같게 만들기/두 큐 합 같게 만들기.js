@@ -1,56 +1,30 @@
-class Queue {
-    constructor(arr) {
-        this.queue = arr;
-        this.front = 0;
-        this.rear = arr.length;
-    }
-    enqueue(value) {
-        this.queue[this.rear++] = value;
-    }
-    dequeue() {
-        if (this.rear <= this.front) return;
-        const target = this.queue[this.front];
-        this.front++;
-        return target;
-    }
-    size() {
-        return this.rear - this.front;
-    }
-}
-
 function solution(queue1, queue2) {
-    // const q1 = new Queue(queue1);
-    // const q2 = new Queue(queue2);
-    const [q1Len, q2Len] = [queue1.length, queue2.length];
-    let q1Sum = queue1.reduce((acc, cur) => acc + cur, 0);
-    let q2Sum = queue2.reduce((acc, cur) => acc + cur, 0);
-    let q1Cnt = 0;
-    let q2Cnt = 0;
-    let q1First = 0;
-    let q2First = 0;
-    let flag = false;
-    while (q1Cnt < q1Len || q2Cnt < q2Len) {
-        if (q1Sum === q2Sum) {
-            flag = true;
+    const len = queue1.length;
+    let sum1 = queue1.reduce((acc, cur) => acc + cur, 0);
+    let sum2 = queue2.reduce((acc, cur) => acc + cur, 0);
+    let sIdx1 = 0;
+    let sIdx2 = 0;
+    let answer = -1;
+    
+    const limit = queue1.length + queue2.length;
+    while (sIdx1 < limit && sIdx2 < limit) {
+        if (sum1 === sum2) {
+            answer = sIdx1 + sIdx2;
             break;
         }
-        if (q1Sum > q2Sum) {
-            // const target = q1.dequeue();
-            // q2.enqueue(target);
-            const target = queue1[q1First++];
+        if (sum1 > sum2) {
+            const target = queue1[sIdx1];
             queue2.push(target);
-            q2Sum += target;
-            q1Sum -= target;
-            q1Cnt++;            
+            sum1 -= target;
+            sum2 += target;
+            sIdx1++;
         } else {
-            // const target = q2.dequeue();
-            // q1.enqueue(target);
-            const target = queue2[q2First++];
+            const target = queue2[sIdx2];
             queue1.push(target);
-            q1Sum += target;
-            q2Sum -= target;
-            q2Cnt++;       
+            sum1 += target;
+            sum2 -= target;
+            sIdx2++;
         }
     }
-    return flag ? q1Cnt + q2Cnt : -1;
+    return answer;
 }
