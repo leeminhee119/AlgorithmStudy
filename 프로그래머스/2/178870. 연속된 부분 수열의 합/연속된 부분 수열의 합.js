@@ -1,26 +1,26 @@
 function solution(sequence, k) {
-    let ansS = 0;
-    let ansE = 0;
-    const LEN = sequence.length;
-    let sum = 0;
-    
     let s = 0;
     let e = 0;
-    let minLength = LEN;
-    for (let i = 0; i < LEN; i++) {
-        s = i;
-        while (sum < k && e < LEN) {
-            sum += sequence[e++];
-        }
+    let sum = sequence[0];
+    const answers = [];
+    while (sequence[e]) {
         if (sum === k) {
-            if ((e - 1 - s) < minLength) {
-                ansS = s;
-                ansE = e - 1;
-                minLength = e - 1 - s;
+            answers.push([s, e]);
+            e++;
+            if (sequence[e]) {
+                sum += sequence[e];    
             }
         }
-        sum -= sequence[i];
+        if (sum > k) {
+            sum -= sequence[s];
+            s++;
+        } else {
+            e++;
+            if (sequence[e]) {
+                sum += sequence[e];    
+            }
+        }
     }
-    
-    return [ansS, ansE];
+    console.log(answers)
+    return answers.reduce((acc, cur) => (cur[1] - cur[0]) < (acc[1] - acc[0]) ? cur : acc , answers[0]);
 }
