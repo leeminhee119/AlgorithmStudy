@@ -1,24 +1,26 @@
 function solution(storey) {
-    // 각 자리수마다 올라갈지 내려갈지 케이스 나누어 재귀
+    let answer = 0;
     
-    let minCnt = Infinity;
-    function move(num, moveCnt) {
-        if (num < 10) {
-            if (num > 5) {
-                minCnt = Math.min(minCnt, moveCnt + 10 - num + 1);
+    
+    while (storey > 0) {
+        const cur = storey % 10; // 맨끝자리 수
+        if (cur > 5) {
+            answer += (10 - cur);
+            storey += (10 - cur);
+        } else if (cur < 5) {
+            answer += cur;
+            storey -= cur;
+        } else {
+            if (Math.floor(storey / 10) % 10 >= 5) {
+                answer += 5;
+                storey += 5;
             } else {
-                minCnt = Math.min(minCnt, moveCnt + num);
+                answer += 5;
+                storey -= 5;
             }
-            return;
         }
-        
-        const digit = num % 10;
-        // 올라가는 경우
-        move((num - digit) / 10 + 1, moveCnt + 10 - digit);
-        // 내려가는 경우
-        move((num - digit) / 10, moveCnt + digit);
+        storey = Math.floor(storey / 10);
     }
     
-    move(storey, 0);
-    return minCnt;
+    return answer;
 }
