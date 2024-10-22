@@ -3,59 +3,52 @@ const readline = require("readline").createInterface({
   output: process.stdout,
 });
 
-let input = [];
+const lines = [];
 
 readline
   .on("line", function (line) {
-    input.push(line);
+    lines.push(line);
   })
   .on("close", function () {
-    solution(input);
+    solution(lines);
     process.exit();
   });
 
-function solution(input) {
-  const N = Number(input[0]);
-  const numbers = input[1].split(" ").map(Number);
-  const counts = input[2].split(" ").map(Number);
+function solution(lines) {
+  const N = +lines[0];
+  const numbers = lines[1].split(" ").map(Number);
+  const counts = lines[2].split(" ").map(Number);
+  const operations = [
+    (a, b) => a + b,
+    (a, b) => a - b,
+    (a, b) => a * b,
+    (a, b) => (a < 0 ? -Math.floor(-a / b) : Math.floor(a / b)),
+  ];
 
-  let maxSum = -1000000000;
-  let minSum = 1000000000;
-  function backtrack(curIdx, sum, curCounts) {
-    if (curIdx === N - 1) {
-      if (sum >= maxSum) {
-        maxSum = sum;
-      }
-      if (sum <= minSum) {
-        minSum = sum;
-      }
+  let max = -100000000000;
+  let min = 100000000000;
+  // 완전 탐색 - O((N - 1)!)
+  function backtrack(counts, res, index) {
+    if (index === N - 1) {
+      max = Math.max(max, res);
+      min = Math.min(min, res);
       return;
     }
-
     for (let i = 0; i < 4; i++) {
-      if (curCounts[i] === 0) {
+      if (counts[i] <= 0) {
         continue;
       }
-      curCounts[i]--;
-      switch (i) {
-        case 0:
-          backtrack(curIdx + 1, sum + numbers[curIdx + 1], curCounts);
-          break;
-        case 1:
-          backtrack(curIdx + 1, sum - numbers[curIdx + 1], curCounts);
-          break;
-        case 2:
-          backtrack(curIdx + 1, sum * numbers[curIdx + 1], curCounts);
-          break;
-        case 3:
-          backtrack(curIdx + 1, parseInt(sum / numbers[curIdx + 1]), curCounts);
-          break;
-      }
-
-      curCounts[i]++;
+      const next = operations[i](res, numbers[index + 1]);
+      counts[i]--;
+      backtrack(counts, next, index + 1);
+      counts[i]++;
     }
   }
-  backtrack(0, numbers[0], counts);
-  console.log(maxSum ? maxSum : 0);
-  console.log(minSum ? minSum : 0);
+
+  backtrack(counts, numbers[0], 0);
+
+  // 결과의 최댓값
+  console.log(max ? max : 0);
+  // 결과의 최소값
+  console.log(min ? min : 0);
 }
