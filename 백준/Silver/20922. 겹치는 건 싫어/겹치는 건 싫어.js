@@ -18,31 +18,20 @@ function solution(lines) {
   const [N, K] = lines[0].split(" ").map(Number);
   const numbers = lines[1].split(" ").map(Number);
 
-  // 연속 부분 수열
-  // 단, 같은 원소가 K개 이하
-
-  // 오른쪽 포인터를 조건 만족하는 한 계속 이동
-  // 조건 불충족 시 충족할 때까지 왼쪽 포인터 이동 후,
-  // 다시 오른쪽 포인터를 조건 만족하는 한 계속 이동하며 최대 길이 갱신
-  // 투 포인터
-
-  const cntMap = numbers.reduce((acc, cur) => {
-    acc[cur] = 0;
-    return acc;
-  }, new Array());
-
-  let start = 0;
-  let end = 0;
-  let maxLength = 0;
-  while (end < N) {
-    if (cntMap[numbers[end]] < K) {
-      cntMap[numbers[end]]++;
-      end++;
-    } else {
-      cntMap[numbers[start]]--;
-      start++;
+  let s = 0;
+  let e = 0;
+  let answer = 0;
+  const cntDict = Array.from({ length: 100000 + 1 }, () => 0);
+  while (s <= e && e < N) {
+    if (cntDict[numbers[e]] + 1 > K) {
+      cntDict[numbers[s]]--;
+      s++;
+      continue;
     }
-    maxLength = Math.max(maxLength, end - start);
+    answer = Math.max(answer, e - s + 1);
+    cntDict[numbers[e]]++;
+    e++;
   }
-  console.log(maxLength);
+
+  console.log(answer);
 }
