@@ -1,34 +1,34 @@
 function solution(order) {
-    const boxes = order.length;
+    // 4-3-1-2-5
+    
+    const n = order.length;
     const stack = [];
-    let targetIdx = 0;
-    let answer = 0;
-    let curBox = 1;
-    while (curBox <= boxes) {
-        const targetBox = order[targetIdx];
-        if (curBox === targetBox) {
-            answer++;
-            targetIdx++;
-            curBox++;
+    
+    let result = 0;
+    let top = 1;
+    let ni = 0;
+    
+    while (top <= n) {
+        const next = order[ni];
+        if (top === next) {
+            top++;
+            result++;
+            ni++;
             continue;
         }
-        if (stack.length === 0 || stack[stack.length - 1] < targetBox) {
-            stack.push(curBox);
-            curBox++;
-            continue;
-        }
-        if (stack[stack.length - 1] === targetBox) {
+        if (stack.length && stack[stack.length - 1] === next) {
             stack.pop();
-            answer++;
-            targetIdx++;
-        } else if (stack[stack.length - 1] > targetBox) {
-            break;
+            result++;
+            ni++;
+            continue;
         }
+        stack.push(top);
+        top++;
     }
-    while (stack.length && stack[stack.length - 1] === order[targetIdx]) {
-        targetIdx++;
+    while (ni <= n && stack.length && stack[stack.length - 1] === order[ni]) {
         stack.pop();
-        answer++;
+        result++;
+        ni++;
     }
-    return answer;
+    return result;
 }
