@@ -1,14 +1,18 @@
 function solution(numbers) {
-    const result = Array.from({ length: numbers.length }, () => -1);
-    const stack = [];
-    numbers.forEach((num, idx) => {
-        // 현재 숫자가 스택의 top보다 크다면
-        while (stack.length && num > stack[stack.length - 1][0]) {
-            const [top, topIdx] = stack.pop();
-            result[topIdx] = num;
+    const N = numbers.length;
+    const result = Array.from({length: N}, () => -1);
+    const stack = [numbers[N - 1]];
+    
+    for (let i = N - 2; i >= 0; i--) {
+        const cur = numbers[i];
+        while (stack.length && stack[stack.length - 1] <= cur) {
+            stack.pop();
         }
-        
-        stack.push([num, idx]);
-    })
+        if (stack.length) {
+            result[i] = stack[stack.length - 1];
+        }
+        stack.push(cur);
+    }
+    
     return result;
 }
