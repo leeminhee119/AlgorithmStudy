@@ -1,11 +1,9 @@
 function solution(x, y, n) {
-    let answer = Infinity;
-    
-    const operations = [(i) => i + n, (i) => 2 * i, (i) => 3 * i];
     const dp = Array.from({length: y + 1}, () => Infinity);
+    
+    const operations = [(i) => i + n, (i) => i * 2, (i) => i * 3];
+    
     dp[x] = 0;
-    
-    
     let cur = x;
     while (cur < y) {
         for (const op of operations) {
@@ -14,6 +12,5 @@ function solution(x, y, n) {
         }
         cur++;
     }
-    
     return dp[y] === Infinity ? -1 : dp[y];
 }
