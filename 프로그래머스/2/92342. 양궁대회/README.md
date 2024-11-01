@@ -1,10 +1,10 @@
 # [level 2] 양궁대회 - 92342 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/92342) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/92342#qna) 
 
 ### 성능 요약
 
-메모리: 33.6 MB, 시간: 0.40 ms
+메모리: 37.2 MB, 시간: 4.20 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 1월 3일 17:41:49
+2024년 11월 01일 12:53:30
 
 ### 문제 설명
 
